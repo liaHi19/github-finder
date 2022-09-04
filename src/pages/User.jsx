@@ -1,43 +1,23 @@
 import React, { useEffect, useContext } from "react";
 import { useParams, Link } from "react-router-dom";
-import {
-  FaAvianex,
-  FaCodepan,
-  FaStore,
-  FaUserFriends,
-  FaUsers,
-} from "react-icons/fa";
+import { FaAvianex } from "react-icons/fa";
 
 import GithubContext from "../context/github/GithubContext";
 
-import UserInfoContainer from "../components/layout/ui/UserInfoContainer";
 import Spinner from "../components/layout/Spinner";
 import UserTop from "../components/layout/ui/UserTop";
 import UserImage from "../components/layout/ui/UserImage";
+import UserInfoContainer from "../components/layout/ui/UserInfoContainer";
+import UserStatistics from "../components/layout/ui/UserStatistics";
 
 const User = () => {
-  const { user, getUser, loading } = useContext(GithubContext);
+  const { getUser, loading } = useContext(GithubContext);
   const { login } = useParams();
 
   useEffect(() => {
     getUser(login);
   }, []);
 
-  const {
-    name,
-    type,
-    avatar_url,
-    location,
-    bio,
-    blog,
-    twitter_username,
-    html_url,
-    followers,
-    following,
-    public_repos,
-    public_gists,
-    hireable,
-  } = user;
   return loading ? (
     <Spinner />
   ) : (
@@ -55,6 +35,7 @@ const User = () => {
             <UserInfoContainer />
           </div>
         </div>
+        <UserStatistics />
       </div>
     </>
   );
