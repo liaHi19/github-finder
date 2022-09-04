@@ -18,7 +18,7 @@ const UserStatistics = () => {
   ];
   return (
     <div className="w-full py-5 mb-6 rounded-lg shadow-md bg-base-100 stats">
-      <div className="grid grid-cols-1 md:grid-cols-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3">
         {userStatistics.map((userStat) => (
           <UserStat key={userStat.id} {...userStat} />
         ))}

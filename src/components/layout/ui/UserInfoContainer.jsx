@@ -14,11 +14,13 @@ const UserInfoContainer = () => {
   ];
   return (
     <div className="w-full rounded-lg shadow-md bg-base-100 stats">
-      {userInfo.map((info) => {
-        if (info.value) {
-          return <UserInfo key={user.id} {...info} />;
-        }
-      })}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        {userInfo.map((info) => {
+          if (info.value) {
+            return <UserInfo key={info.id} {...info} />;
+          }
+        })}
+      </div>
     </div>
   );
 };
