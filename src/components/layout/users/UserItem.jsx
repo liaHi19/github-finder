@@ -1,8 +1,8 @@
-import React from 'react';
+import React from "react";
 import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 
-const UserItem = ({user: {login, avatar_url}}) => {
+const UserItem = ({ user: { login, avatar_url } }) => {
   return (
     <div className="card compact shadow-md side bg-base-100">
       <div className="flex-row items-center space-x-4 card-body">
@@ -15,18 +15,20 @@ const UserItem = ({user: {login, avatar_url}}) => {
         </div>
         <div>
           <h2 className="card-title">{login}</h2>
-          <Link to={`/users/${login}`}
-          className="text-base-content text-opacity-40">
+          <Link
+            to={`/user/${login}`}
+            className="text-base-content text-opacity-40"
+          >
             Visit Profile
           </Link>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
 UserItem.propTypes = {
-  user: PropTypes.object.isRequired
-}
+  user: PropTypes.object.isRequired,
+};
 
-export default UserItem
+export default UserItem;
