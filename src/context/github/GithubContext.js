@@ -1,10 +1,19 @@
-import { createContext, useReducer, useState, useEffect } from "react";
+import { createContext, useReducer, useState } from "react";
+import axios from "axios";
+
 import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
 
 const GITHUB_URL = process.env.REACT_APP_GITHUB_URL;
 const GITHUB_TOKEN = process.env.REACT_APP_GITHUB_TOKEN;
+
+const github = axios.create({
+  baseURL: GITHUB_URL,
+  headers: {
+    Authorization: `token ${GITHUB_TOKEN}`,
+  },
+});
 
 export const GithubProvider = ({ children }) => {
   const initialState = {
@@ -33,12 +42,8 @@ export const GithubProvider = ({ children }) => {
     const params = new URLSearchParams({
       q: text,
     });
-    const response = await fetch(`${GITHUB_URL}/search/users?${params}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
-    });
-    const { items } = await response.json();
+    const response = await github.get(`/search/users?${params}`);
+    const items = await response.data.items;
 
     dispatch({
       type: "GET_USERS",
@@ -46,28 +51,9 @@ export const GithubProvider = ({ children }) => {
     });
   };
 
-  //get Single User
-  const getUser = async (login) => {
-    setLoading();
+  //getUserAndRepos
 
-    const response = await fetch(`${GITHUB_URL}/users/${login}`, {
-      headers: {
-        Authorization: `token ${GITHUB_TOKEN}`,
-      },
-    });
-    if (response.status === 404) {
-      window.location = "/notfound";
-    } else {
-      const data = await response.json();
-      dispatch({
-        type: "GET_USER",
-        payload: data,
-      });
-    }
-  };
-
-  //get user Repos
-  const getUserRepos = async (login) => {
+  const getUserAndRepos = async (login) => {
     setLoading();
 
     const params = new URLSearchParams({
@@ -76,23 +62,17 @@ export const GithubProvider = ({ children }) => {
       page: page,
     });
 
-    const response = await fetch(
-      `${GITHUB_URL}/users/${login}/repos?${params}`,
-      {
-        headers: {
-          Authorization: `token ${GITHUB_TOKEN}`,
-        },
-      }
-    );
-    if (response.status === 404) {
-      window.location = "/notfound";
-    } else {
-      const data = await response.json();
-      dispatch({
-        type: "GET_REPOS",
-        payload: data,
-      });
-    }
+    const [user, repos] = await Promise.all([
+      github.get(`/users/${login}`),
+      github.get(`/users/${login}/repos?${params}`),
+    ]);
+
+    const data = { user: user.data, repos: repos.data };
+
+    dispatch({
+      type: "GET_USER_AND_REPOS",
+      payload: data,
+    });
   };
 
   //clear Users
@@ -111,18 +91,14 @@ export const GithubProvider = ({ children }) => {
   return (
     <GithubContext.Provider
       value={{
-        users: state.users,
-        loading: state.loading,
-        user: state.user,
-        repos: state.repos,
+        ...state,
         page,
+        perPage,
         searchUsers,
         clearUsers,
-        getUser,
-        getUserRepos,
+        getUserAndRepos,
         prevPage,
         nextPage,
-        perPage,
       }}
     >
       {children}
