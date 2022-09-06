@@ -1,6 +1,6 @@
 ## Github Finder
 
-_[https://github-finder-liard-ten.vercel.app/](url)_
+_https://github-finder-liard-ten.vercel.app/_
 
 ## _A React app to search GitHub profiles and see profile details_
 
