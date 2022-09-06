@@ -9,12 +9,12 @@ import Spinner from "../components/layout/Spinner";
 
 const User = () => {
   const { login } = useParams();
-  const { loading, getUser, getUserRepos } = useContext(GithubContext);
+  const { loading, getUser, getUserRepos, page } = useContext(GithubContext);
 
   useEffect(() => {
     getUser(login);
     getUserRepos(login);
-  }, []);
+  }, [login, page]);
 
   return (
     <>

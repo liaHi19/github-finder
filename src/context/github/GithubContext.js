@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState, useEffect } from "react";
 import githubReducer from "./GithubReducer";
 
 const GithubContext = createContext();
@@ -15,6 +15,17 @@ export const GithubProvider = ({ children }) => {
   };
 
   const [state, dispatch] = useReducer(githubReducer, initialState);
+  const [page, setPage] = useState(1);
+  const perPage = 10;
+
+  const prevPage = () => {
+    setPage((prev) => prev - 1);
+  };
+
+  const nextPage = () => {
+    setPage((prev) => prev + 1);
+  };
+
   //get search results
   const searchUsers = async (text) => {
     setLoading();
@@ -61,7 +72,8 @@ export const GithubProvider = ({ children }) => {
 
     const params = new URLSearchParams({
       sort: "created",
-      per_page: 10,
+      per_page: perPage,
+      page: page,
     });
 
     const response = await fetch(
@@ -103,10 +115,14 @@ export const GithubProvider = ({ children }) => {
         loading: state.loading,
         user: state.user,
         repos: state.repos,
+        page,
         searchUsers,
         clearUsers,
         getUser,
         getUserRepos,
+        prevPage,
+        nextPage,
+        perPage,
       }}
     >
       {children}

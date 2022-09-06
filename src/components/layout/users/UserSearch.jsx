@@ -17,6 +17,7 @@ const UserSearch = () => {
   const handleChange = (e) => {
     setText(e.target.value);
   };
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -27,6 +28,7 @@ const UserSearch = () => {
       setText("");
     }
   };
+
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 gap-8 mb-8">
       <div>
